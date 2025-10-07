@@ -1,0 +1,306 @@
+Table Cliente {
+  ID INT [pk, increment, unique]
+  Codigo VARCHAR [not null]
+  ApellidoPaterno VARCHAR [not null]
+  ApellidoMaterno VARCHAR [not null]
+  PrimerNombre VARCHAR [not null]
+  SegundoNombre VARCHAR
+  NombreCompleto VARCHAR [not null]
+  IDTipoCliente INT
+  NombreComercial VARCHAR 
+  DocIdentidad VARCHAR [not null]
+  IDTipoDocIdentidad INT
+  Email VARCHAR 
+  IDCategoriaCliente INT
+  IDTipoNegocio INT
+  Estado BIT [default: 1]
+  IDUsuarioDesactivacion INT
+  ACredito BIT [default: 1]
+  AContado BIT [default: 1]
+  Exceptuadopercepcion BIT [default: 0]
+  DiasACreditoPermitidos INT [default: 0]
+  DiasAContadoPermitidos INT [default: 0]
+  Observacion TEXT
+  FechaCreacion DATETIME
+  IDUsuarioCreacion INT
+  FechaModificacion DATETIME
+  FechaDesactivacion DATETIME
+}
+Table Pais {
+  ID INT [pk, increment, unique]
+  Codigo VARCHAR(10) [not null] // Ej: 'PE'
+  Nombre VARCHAR(100) [not null] // Ej: 'Perú'
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Table Departamento {
+  ID INT [pk, increment, unique]
+  IDPais INT [not null] // FK a Pais.ID
+  Codigo VARCHAR(10) [not null] // Ej: '01'
+  Nombre VARCHAR(100) [not null] // Ej: 'Lima'
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Table Provincia {
+  ID INT [pk, increment, unique]
+  IDDepartamento INT [not null] // FK a Departamento.ID
+  Codigo VARCHAR(10) [not null] // Ej: '1501'
+  Nombre VARCHAR(100) [not null] // Ej: 'Lima'
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Table Distrito {
+  ID INT [pk, increment, unique]
+  IDProvincia INT [not null] // FK a Provincia.ID
+  Codigo VARCHAR(10) [not null] // Ej: '150101'
+  Nombre VARCHAR(100) [not null] // Ej: 'Cercado de Lima'
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Ref: Departamento.IDPais > Pais.ID
+Ref: Provincia.IDDepartamento > Departamento.ID
+Ref: Distrito.IDProvincia > Provincia.ID
+
+Table CamposCliente {
+  ID INT [pk, increment, unique]
+  Campo1 VARCHAR
+  Campo2 VARCHAR
+  Campo3 VARCHAR
+  Campo4 VARCHAR
+  IDCaracteristica1 INT
+  IDCaracteristica2 INT
+  IDCaracteristica3 INT
+  IDCaracteristica4 INT
+  IDCaracteristica5 INT
+  IDCaracteristica6 INT
+  IDCaracteristica7 INT
+  IDCaracteristica8 INT
+  IDCaracteristica9 INT
+  IDCaracteristica10 INT
+  IDCaracteristica11 INT
+  IDCaracteristica12 INT
+  IDCaracteristica13 INT
+  IDCaracteristica14 INT
+  IDCaracteristica15 INT
+  IDCaracteristica16 INT
+  IDCaracteristica17 INT
+  IDCaracteristica18 INT
+  IDCaracteristica19 INT
+  IDCaracteristica20 INT
+  IDCaracteristica21 INT
+  IDCaracteristica22 INT
+  IDCaracteristica23 INT
+  IDCaracteristica24 INT
+  IDCaracteristica25 INT
+  IDCaracteristica26 INT
+  IDCaracteristica27 INT
+  IDCaracteristica28 INT
+  IDCaracteristica29 INT
+  IDCaracteristica30 INT
+  IDCaracteristica31 INT
+  IDCaracteristica32 INT
+  IDCaracteristica33 INT
+  IDCaracteristica34 INT
+  IDCaracteristica35 INT
+  IDCaracteristica36 INT
+  IDCaracteristica37 INT
+  IDCaracteristica38 INT
+  IDCaracteristica39 INT
+  IDCaracteristica40 INT
+  IDCaracteristica41 INT
+  IDCaracteristica42 INT
+  IDCaracteristica43 INT
+  IDCaracteristica44 INT
+  IDCaracteristica45 INT
+  IDCaracteristica46 INT
+  IDCaracteristica47 INT
+  IDCaracteristica48 INT
+  IDCaracteristica49 INT
+  IDCaracteristica50 INT
+}
+
+Ref: Cliente.ID - CamposCliente.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica1 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica2 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica3 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica4 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica5 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica6 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica7 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica8 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica9 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica10 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica11 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica12 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica13 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica14 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica15 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica16 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica17 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica18 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica19 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica20 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica21 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica22 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica23 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica24 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica25 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica26 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica27 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica28 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica29 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica30 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica31 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica32 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica33 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica34 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica35 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica36 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica37 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica38 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica39 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica40 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica41 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica42 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica43 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica44 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica45 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica46 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica47 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica48 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica49 > Caracteristica.ID [delete: restrict]
+Ref: CamposCliente.IDCaracteristica50 > Caracteristica.ID [delete: restrict]
+
+
+Table Caracteristica {
+  ID INT [pk, increment, unique]
+  Codigo varchar [not null]
+  Descripcion varchar [not null]
+  IDTipoCaracteristica INT
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+
+}
+
+Table TipoCaracteristica {
+  ID int
+  Codigo VARCHAR
+  Descripcion VARCHAR
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Ref: Caracteristica.IDTipoCaracteristica > TipoCaracteristica.ID [delete: restrict]
+
+
+Table TipoCliente {
+  ID INT [pk, increment, unique]
+  Codigo VARCHAR
+  Descripcion VARCHAR
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Table TipoDocIdentidad {
+  ID INT [pk, increment, unique]
+  Codigo VARCHAR
+  Abreviacion VARCHAR [not null]
+  Descripcion VARCHAR
+  Extranjero BIT [default: 0]
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Table CategoriaCliente {
+  ID INT [pk, increment, unique]
+  Codigo VARCHAR
+  Descripcion VARCHAR
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Table TipoNegocio {
+  ID INT [pk, increment, unique]
+  Codigo VARCHAR [not null]
+  Descripcion VARCHAR [not null]
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Table TipoDireccion {
+  ID INT [pk, increment, unique]
+  Codigo VARCHAR [not null]
+  Descripcion VARCHAR [not null]
+  Estado BIT
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Table DireccionCliente {
+  ID INT [pk, increment, unique]
+  IDCliente INT 
+  IDTipoDireccion INT
+  Direccion VARCHAR  [not null]
+  Ubigeo VARCHAR  [not null]
+  IDDepartamento INT
+  IDProvincia INT
+  IDDistrito INT
+  IDPais INT
+  Referencia VARCHAR  [not null]
+  EsPrincipal BIT [default: 1] //Debe tener por cliente una sola direccion principal
+  Latitud DECIMAL [default: 0.00000000]
+  Longitud DECIMAL [default: 0.00000000]
+  IDSucursal INT
+  IDZona INT
+  Estado BIT [default: 0]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Ref: DireccionCliente.IDPais > Pais.ID [delete: restrict]
+Ref: DireccionCliente.IDDepartamento > Departamento.ID [delete: restrict]
+Ref: DireccionCliente.IDProvincia > Provincia.ID [delete: restrict]
+Ref: DireccionCliente.IDDistrito > Distrito.ID [delete: restrict]
+
+Table Zona {
+  ID INT [pk, increment, unique]
+  Codigo VARCHAR [not null]
+  Descripcion VARCHAR [not null]
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+Table Sucursal {
+  ID INT [pk, increment, unique]
+  Codigo VARCHAR [not null]
+  Descripcion VARCHAR [not null]
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+Ref: DireccionCliente.IDZona > Zona.ID [delete: restrict]
+Ref: DireccionCliente.IDSucursal > Sucursal.ID [delete: restrict]
+
+Ref: Cliente.IDTipoCliente > TipoCliente.ID [delete: restrict]
+Ref: Cliente.IDTipoDocIdentidad > TipoDocIdentidad.ID [delete: restrict]
+Ref: Cliente.IDCategoriaCliente > CategoriaCliente.ID [delete: restrict]
+Ref: Cliente.IDTipoNegocio > TipoNegocio.ID [delete: restrict]
+Ref: DireccionCliente.IDCliente > Cliente.ID [delete: restrict]
+Ref: DireccionCliente.IDTipoDireccion > TipoDireccion.ID [delete: restrict]
+
+
+
