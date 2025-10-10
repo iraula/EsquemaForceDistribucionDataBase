@@ -249,32 +249,42 @@ Table TipoDireccion {
   FechaCreacion DATETIME
   FechaModificacion DATETIME
 }
-
-Table DireccionCliente {
+Table Direccion {
   ID INT [pk, increment, unique]
-  IDCliente INT 
   IDTipoDireccion INT
-  Direccion VARCHAR  [not null]
-  Ubigeo VARCHAR  [not null]
+  Direccion VARCHAR(250) [not null]
+  Ubigeo VARCHAR(10) [not null]
   IDDepartamento INT
   IDProvincia INT
   IDDistrito INT
   IDPais INT
-  Referencia VARCHAR  [not null]
-  EsPrincipal BIT [default: 1] //Debe tener por cliente una sola direccion principal
-  Latitud DECIMAL [default: 0.00000000]
-  Longitud DECIMAL [default: 0.00000000]
+  Referencia VARCHAR(255)
+  Latitud DECIMAL(10,8) [default: 0.00000000]
+  Longitud DECIMAL(11,8) [default: 0.00000000]
   IDSucursal INT
   IDZona INT
-  Estado BIT [default: 0]
+  Estado BIT [default: 1]
   FechaCreacion DATETIME
   FechaModificacion DATETIME
 }
+Table EntidadDireccion {
+  ID INT [pk, increment, unique]
+  TipoEntidad VARCHAR(20) [not null] // CLIENTE, VENDEDOR, PROVEEDOR, etc.
+  IDDireccion INT 
+  EsPrincipal BIT [default: 0]
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+  IDCliente int [default: null]
+  IDVendedor int [default: null]
+  IDProveedor int [default: null]
+}
 
-Ref: DireccionCliente.IDPais > Pais.ID [delete: restrict]
-Ref: DireccionCliente.IDDepartamento > Departamento.ID [delete: restrict]
-Ref: DireccionCliente.IDProvincia > Provincia.ID [delete: restrict]
-Ref: DireccionCliente.IDDistrito > Distrito.ID [delete: restrict]
+
+Ref: Direccion.IDPais > Pais.ID [delete: restrict]
+Ref: Direccion.IDDepartamento > Departamento.ID [delete: restrict]
+Ref: Direccion.IDProvincia > Provincia.ID [delete: restrict]
+Ref: Direccion.IDDistrito > Distrito.ID [delete: restrict]
 
 Table Zona {
   ID INT [pk, increment, unique]
@@ -292,15 +302,20 @@ Table Sucursal {
   FechaCreacion DATETIME
   FechaModificacion DATETIME
 }
-Ref: DireccionCliente.IDZona > Zona.ID [delete: restrict]
-Ref: DireccionCliente.IDSucursal > Sucursal.ID [delete: restrict]
+
+Ref: EntidadDireccion.IDCliente > Cliente.ID [delete: restrict]
+Ref: EntidadDireccion.IDDireccion > Direccion.ID [delete: restrict]
+
+
+Ref: Direccion.IDZona > Zona.ID [delete: restrict]
+Ref: Direccion.IDSucursal > Sucursal.ID [delete: restrict]
 
 Ref: Cliente.IDTipoCliente > TipoCliente.ID [delete: restrict]
 Ref: Cliente.IDTipoDocIdentidad > TipoDocIdentidad.ID [delete: restrict]
 Ref: Cliente.IDCategoriaCliente > CategoriaCliente.ID [delete: restrict]
 Ref: Cliente.IDTipoNegocio > TipoNegocio.ID [delete: restrict]
-Ref: DireccionCliente.IDCliente > Cliente.ID [delete: restrict]
-Ref: DireccionCliente.IDTipoDireccion > TipoDireccion.ID [delete: restrict]
+
+Ref: Direccion.IDTipoDireccion > TipoDireccion.ID [delete: restrict]
 
 
 
@@ -460,15 +475,7 @@ Table EsquemaComercialProducto {
 Ref: EsquemaComercialProducto.IDEsquemaComercial > EsquemaComercial.ID [delete: restrict]
 Ref: EsquemaComercialProducto.IDProducto > Producto.ID [delete: restrict]
 
-// == Relación con vendedores ==
-Table Vendedor {
-  ID INT [pk, increment]
-  Codigo VARCHAR(50) [not null, unique]
-  Nombre VARCHAR(150) [not null]
-  Estado BIT [default: 1]
-  FechaCreacion DATETIME
-  FechaModificacion DATETIME
-}
+
 
 Table EsquemaComercialVendedor {
   ID INT [pk, increment]
@@ -535,6 +542,8 @@ Table GrupoVentas {
   ID INT [pk, increment, unique]
   Codigo VARCHAR(50) [not null, unique]
   Nombre VARCHAR(150) [not null]
+  IDFuerzaVenta int
+  IDSupervisor int
   Estado BIT [default: 1]
   FechaCreacion DATETIME
   FechaModificacion DATETIME
@@ -564,7 +573,7 @@ Table ListaPrecio {
   Prioridad INT [default: 100]
   VigenciaDesde DATETIME
   VigenciaHasta DATETIME
-  Activa BIT [default: 1]
+  Estado BIT [default: 1]
   FechaCreacion DATETIME
   FechaModificacion DATETIME
 }
@@ -658,6 +667,110 @@ Table SucursalUnidadListaPrecios{
 Ref: SucursalUnidadListaPrecios.IDItemPrecioProducto > ItemPrecioProducto.ID
 
 Ref: SucursalUnidadListaPrecios.IDSucursal > Sucursal.ID
+
+/// Vendedor
+
+// == Relación con vendedores ==
+Table Vendedor {
+  ID INT [pk, increment,unique]                                   // Identificador interno
+  Codigo VARCHAR(50) [not null, unique]                    // Código único del vendedor (ej: SAP Code)
+  NombreCompleto VARCHAR(200) [not null]                   // Nombre completo o razón social del vendedor
+  NombreCorto VARCHAR(100)                                 // Alias o nombre corto
+  IDTipoVendedor INT                                 // Interno, Externo, Distribuidor, Freelance, etc.
+  DocumentoIdentidad VARCHAR(20)   [not null]                          // DNI / RUC / NIF según país
+  IDTipoDocIdentidad INT                                // DNI, RUC, CE, PAS, etc.
+  FechaNacimiento DATE                                     // Opcional, para control de personal
+  Sexo CHAR(1)  // M y F                                           // M / F / O (opcional)
+  Telefono VARCHAR(30)  
+  Email VARCHAR(150)
+  Observacion TEXT
+  IDDireccion VARCHAR(255)                              // Grupo o línea de negocio
+  FechaIngreso DATE                                        // Fecha de incorporación
+  FechaBaja DATE                                           // Fecha de cese (si aplica)
+  IDEstadoLaboral  INT          // Activo, Inactivo, Suspendido, Retirado                 // % de comisión
+  // --- Auditoría ---
+  Estado BIT [default: 1]                                  // 1=Activo, 0=Inactivo
+  UsuarioCreacion VARCHAR(50) // esto se puede quitar
+  FechaCreacion DATETIME 
+  UsuarioModificacion VARCHAR(50)  // esto se puede quitar
+  FechaModificacion DATETIME
+}
+
+  // Activo, Inactivo, Suspendido, Retirado 
+
+Table TipoVendedor{
+  ID int [pk, increment,unique]  
+  Codigo VARCHAR(50) [not null, unique]
+  Descripcion VARCHAR(120) [not null]
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+
+}
+
+Table EstadoLaboral{
+  ID INT [pk, increment,unique]
+  Codigo VARCHAR(50) [not null, unique]
+  Descripcion VARCHAR(120) [not null]
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+Ref: EntidadDireccion.IDVendedor > Vendedor.ID [delete: restrict]
+Ref: EntidadDireccion.IDProveedor > Proveedor.ID [delete: restrict]
+Ref: Vendedor.IDTipoVendedor > TipoVendedor.ID
+Ref: Vendedor.IDTipoDocIdentidad > TipoDocIdentidad.ID
+Ref: Vendedor.IDDireccion > Direccion.ID
+Ref: Vendedor.IDEstadoLaboral > EstadoLaboral.ID
+
+Table Supervisor {
+  ID INT [pk, increment,unique]
+  Codigo VARCHAR(50) [not null, unique]
+  Descripcion VARCHAR(120) [not null]
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Table FuerzaVenta {
+  ID INT [pk, increment,unique]
+  Codigo VARCHAR(50) [not null, unique]
+  Descripcion VARCHAR(120) [not null]
+  IDCanal INT
+  IDJefeVenta INT
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Table Canal {
+  ID INT [pk, increment,unique]
+  Codigo VARCHAR(50) [not null, unique]
+  Descripcion VARCHAR(120) [not null]
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Table JefeVenta {
+  ID INT [pk, increment,unique]
+  Codigo VARCHAR(50) [not null, unique]
+  Descripcion VARCHAR(120) [not null]
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Ref: GrupoVentas.IDSupervisor > Supervisor.ID
+
+Ref: GrupoVentas.IDFuerzaVenta > FuerzaVenta.ID
+
+Ref: FuerzaVenta.IDCanal > Canal.ID
+
+Ref: FuerzaVenta.IDJefeVenta > JefeVenta.ID
+
+
+
 
 
 

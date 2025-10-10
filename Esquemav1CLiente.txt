@@ -249,32 +249,40 @@ Table TipoDireccion {
   FechaCreacion DATETIME
   FechaModificacion DATETIME
 }
-
-Table DireccionCliente {
+Table Direccion {
   ID INT [pk, increment, unique]
-  IDCliente INT 
   IDTipoDireccion INT
-  Direccion VARCHAR  [not null]
-  Ubigeo VARCHAR  [not null]
+  Direccion VARCHAR(250) [not null]
+  Ubigeo VARCHAR(10) [not null]
   IDDepartamento INT
   IDProvincia INT
   IDDistrito INT
   IDPais INT
-  Referencia VARCHAR  [not null]
-  EsPrincipal BIT [default: 1] //Debe tener por cliente una sola direccion principal
-  Latitud DECIMAL [default: 0.00000000]
-  Longitud DECIMAL [default: 0.00000000]
+  Referencia VARCHAR(255)
+  Latitud DECIMAL(10,8) [default: 0.00000000]
+  Longitud DECIMAL(11,8) [default: 0.00000000]
   IDSucursal INT
   IDZona INT
-  Estado BIT [default: 0]
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+Table EntidadDireccion {
+  ID INT [pk, increment, unique]
+  TipoEntidad VARCHAR(20) [not null] // CLIENTE, VENDEDOR, PROVEEDOR, etc.
+  IDPersona INT [not null]            // ID de la entidad (Cliente/Vendedor)
+  IDDireccion INT 
+  EsPrincipal BIT [default: 0]
+  Estado BIT [default: 1]
   FechaCreacion DATETIME
   FechaModificacion DATETIME
 }
 
-Ref: DireccionCliente.IDPais > Pais.ID [delete: restrict]
-Ref: DireccionCliente.IDDepartamento > Departamento.ID [delete: restrict]
-Ref: DireccionCliente.IDProvincia > Provincia.ID [delete: restrict]
-Ref: DireccionCliente.IDDistrito > Distrito.ID [delete: restrict]
+
+Ref: Direccion.IDPais > Pais.ID [delete: restrict]
+Ref: Direccion.IDDepartamento > Departamento.ID [delete: restrict]
+Ref: Direccion.IDProvincia > Provincia.ID [delete: restrict]
+Ref: Direccion.IDDistrito > Distrito.ID [delete: restrict]
 
 Table Zona {
   ID INT [pk, increment, unique]
@@ -292,15 +300,19 @@ Table Sucursal {
   FechaCreacion DATETIME
   FechaModificacion DATETIME
 }
-Ref: DireccionCliente.IDZona > Zona.ID [delete: restrict]
-Ref: DireccionCliente.IDSucursal > Sucursal.ID [delete: restrict]
+
+Ref: EntidadDireccion.IDPersona > Cliente.ID [delete: restrict]
+Ref: EntidadDireccion.IDDireccion > Direccion.ID [delete: restrict]
+
+
+Ref: Direccion.IDZona > Zona.ID [delete: restrict]
+Ref: Direccion.IDSucursal > Sucursal.ID [delete: restrict]
 
 Ref: Cliente.IDTipoCliente > TipoCliente.ID [delete: restrict]
 Ref: Cliente.IDTipoDocIdentidad > TipoDocIdentidad.ID [delete: restrict]
 Ref: Cliente.IDCategoriaCliente > CategoriaCliente.ID [delete: restrict]
 Ref: Cliente.IDTipoNegocio > TipoNegocio.ID [delete: restrict]
-Ref: DireccionCliente.IDCliente > Cliente.ID [delete: restrict]
-Ref: DireccionCliente.IDTipoDireccion > TipoDireccion.ID [delete: restrict]
 
+Ref: Direccion.IDTipoDireccion > TipoDireccion.ID [delete: restrict]
 
 
