@@ -270,12 +270,14 @@ Table Direccion {
 Table EntidadDireccion {
   ID INT [pk, increment, unique]
   TipoEntidad VARCHAR(20) [not null] // CLIENTE, VENDEDOR, PROVEEDOR, etc.
-  IDPersona INT [not null]            // ID de la entidad (Cliente/Vendedor)
   IDDireccion INT 
   EsPrincipal BIT [default: 0]
   Estado BIT [default: 1]
   FechaCreacion DATETIME
   FechaModificacion DATETIME
+  IDCliente int [default: null]
+  IDVendedor int [default: null]
+  IDProveedor int [default: null]
 }
 
 
@@ -301,7 +303,17 @@ Table Sucursal {
   FechaModificacion DATETIME
 }
 
-Ref: EntidadDireccion.IDPersona > Cliente.ID [delete: restrict]
+Table Telefono {
+  ID INT [pk, increment, unique]
+  IDCliente int
+  Numero Varchar(50) [not null]
+  EsPrinciapal BIT 
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+Ref: Telefono.IDCliente > Cliente.ID [delete: restrict]
+Ref: EntidadDireccion.IDCliente > Cliente.ID [delete: restrict]
 Ref: EntidadDireccion.IDDireccion > Direccion.ID [delete: restrict]
 
 
