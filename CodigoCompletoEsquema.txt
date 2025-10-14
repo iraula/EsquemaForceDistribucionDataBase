@@ -290,10 +290,25 @@ Table Zona {
   ID INT [pk, increment, unique]
   Codigo VARCHAR [not null]
   Descripcion VARCHAR [not null]
+  IDTipoGeocerca INT // POLYGON, CIRCLE, CUSTOM
+  LatitudCentro DECIMAL(10,6)
+  LongitudCentro DECIMAL(10,6)
+  RadioMetros DECIMAL(10,2) // si es tipo "CIRCLE"
+  Coordenadas TEXT // si es tipo POLYGON: lista de coordenadas en JSON o WKT
   Estado BIT [default: 1]
   FechaCreacion DATETIME
   FechaModificacion DATETIME
 }
+Table TipoGeocerca {
+  ID INT [pk, increment, unique]
+  Codigo VARCHAR [not null]
+  Descripcion VARCHAR [not null]   // POLYGON, CIRCLE, CUSTOM
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+Ref: Zona.IDTipoGeocerca > TipoGeocerca.ID [delete: restrict]
+
 Table Sucursal {
   ID INT [pk, increment, unique]
   Codigo VARCHAR [not null]
@@ -307,7 +322,9 @@ Table Telefono {
   ID INT [pk, increment, unique]
   IDCliente int
   Numero Varchar(50) [not null]
-  EsPrinciapal BIT 
+  EsPrincipal BIT
+  Contacto string
+  Puesto string
   Estado BIT [default: 1]
   FechaCreacion DATETIME
   FechaModificacion DATETIME
@@ -780,7 +797,91 @@ Ref: FuerzaVenta.IDCanal > Canal.ID
 Ref: FuerzaVenta.IDJefeVenta > JefeVenta.ID
 
 
+// rutas
+
+
+Table Ruta {
+  ID INT [pk, increment]
+  Codigo VARCHAR(20) [unique, not null]
+  Nombre VARCHAR(150) [not null]
+  IDVendedor INT [not null, ref: > Vendedor.ID] // Una ruta tiene un solo vendedor
+  FechaInicio DATE
+  FechaFin DATE
+  IDTipoGeocerca  int // POLYGON, CIRCLE, CUSTOM
+  LatitudCentro DECIMAL(10,6)
+  LongitudCentro DECIMAL(10,6)
+  RadioMetros DECIMAL(10,2) // si es tipo "CIRCLE"
+  Coordenadas TEXT // si es tipo POLYGON: lista de coordenadas en JSON o WKT
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Table DiaSemana {
+  ID INT [pk, increment]
+  Nombre VARCHAR(20) [unique, not null] // Lunes, Martes, etc.
+  Codigo VARCHAR(3) [unique] // LUN, MAR, MIE, etc.
+}
+
+//////////////////////////////////////////////////////
+// NUEVA TABLA CLAVE: RELACIÓN RUTA - ZONA - DÍA
+//////////////////////////////////////////////////////
+
+Table RutaZonaDia {
+  ID INT [pk, increment]
+  IDRuta INT [not null, ref: > Ruta.ID]
+  IDZona INT [not null, ref: > Zona.ID]
+  IDDia INT [not null, ref: > DiaSemana.ID]
+  HoraInicio TIME
+  HoraFin TIME
+  OrdenVisita INT // prioridad del recorrido
+  Estado BIT [default: 1]
+  Comentario VARCHAR(255)
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+Ref: Ruta.IDTipoGeocerca > TipoGeocerca.ID [delete: restrict]
 
 
 
+///// Promociones
 
+Table Promocion {
+  ID INT [pk, increment]
+  ID_Tradde VARCHAR(60)  [not null]
+  Codigo VARCHAR(60)  [not null]
+  Descripcion Varchar(255) [not null]
+  DescripcionComercial Varchar(255)
+  FechaInicio Date
+  FechaFinal Date
+  IDProveedor INT 
+  IDTipo INT
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+
+}
+Table TipoPromocion {
+  ID INT [pk, increment]
+  Codigo VARCHAR(60)  [not null]
+  Descripcion Varchar(255) [not null]
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+
+Ref: Promocion.IDProveedor > TipoPromocion.ID [delete: restrict]
+
+Table ObsequioPromocion {
+  ID INT [pk, increment]
+  IDPromocion int
+  IDProducto int
+  IDUnidad int
+  Cantidad int
+  Cantidadmax int
+  Desde Date
+  Hasta Date
+  MaxCliente int
+}
+
+Ref: ObsequioPromocion.IDPromocion > Promocion.ID [delete: restrict]
