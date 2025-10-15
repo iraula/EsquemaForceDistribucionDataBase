@@ -6,6 +6,7 @@ Table Cliente {
   PrimerNombre VARCHAR [not null]
   SegundoNombre VARCHAR
   NombreCompleto VARCHAR [not null]
+  IDTipoPersona INT
   IDTipoCliente INT
   NombreComercial VARCHAR 
   DocIdentidad VARCHAR [not null]
@@ -26,6 +27,16 @@ Table Cliente {
   FechaModificacion DATETIME
   FechaDesactivacion DATETIME
 }
+Table TipoPersona {
+  ID INT [pk, increment, unique]
+  Codigo VARCHAR(10) [not null] 
+  Descripcion VARCHAR(100) [not null] 
+  Estado BIT [default: 1]
+  FechaCreacion DATETIME
+  FechaModificacion DATETIME
+}
+Ref: Cliente.IDTipoPersona > TipoPersona.ID
+
 Table Pais {
   ID INT [pk, increment, unique]
   Codigo VARCHAR(10) [not null] // Ej: 'PE'
@@ -249,6 +260,7 @@ Table TipoDireccion {
   FechaCreacion DATETIME
   FechaModificacion DATETIME
 }
+
 Table Direccion {
   ID INT [pk, increment, unique]
   IDTipoDireccion INT
@@ -262,11 +274,23 @@ Table Direccion {
   Latitud DECIMAL(10,8) [default: 0.00000000]
   Longitud DECIMAL(11,8) [default: 0.00000000]
   IDSucursal INT
-  IDZona INT
   Estado BIT [default: 1]
   FechaCreacion DATETIME
   FechaModificacion DATETIME
 }
+
+Table DireccionZona {
+  ID INT [pk, increment, unique]
+  IDDireccion INT
+  IDZona int
+  EsPrincipal BIT
+  Estado BIT [default: 1]
+}
+
+Ref: DireccionZona.IDDireccion > Direccion.ID [delete: restrict]
+Ref: DireccionZona.IDZona > Direccion.ID [delete: restrict]
+
+
 Table EntidadDireccion {
   ID INT [pk, increment, unique]
   TipoEntidad VARCHAR(20) [not null] // CLIENTE, VENDEDOR, PROVEEDOR, etc.
@@ -318,7 +342,7 @@ Table Sucursal {
   FechaModificacion DATETIME
 }
 
-Table Telefono {
+Table Contacto {
   ID INT [pk, increment, unique]
   IDCliente int
   Numero Varchar(50) [not null]
@@ -329,12 +353,12 @@ Table Telefono {
   FechaCreacion DATETIME
   FechaModificacion DATETIME
 }
-Ref: Telefono.IDCliente > Cliente.ID [delete: restrict]
+Ref: Contacto.IDCliente > Cliente.ID [delete: restrict]
 Ref: EntidadDireccion.IDCliente > Cliente.ID [delete: restrict]
 Ref: EntidadDireccion.IDDireccion > Direccion.ID [delete: restrict]
 
 
-Ref: Direccion.IDZona > Zona.ID [delete: restrict]
+
 Ref: Direccion.IDSucursal > Sucursal.ID [delete: restrict]
 
 Ref: Cliente.IDTipoCliente > TipoCliente.ID [delete: restrict]
