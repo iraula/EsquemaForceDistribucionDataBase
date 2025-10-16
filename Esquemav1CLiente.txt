@@ -270,6 +270,7 @@ Table Direccion {
   IDProvincia INT
   IDDistrito INT
   IDPais INT
+  IDZonaReparto INT
   Referencia VARCHAR(255)
   Latitud DECIMAL(10,8) [default: 0.00000000]
   Longitud DECIMAL(11,8) [default: 0.00000000]
@@ -315,6 +316,8 @@ Table Zona {
   Codigo VARCHAR [not null]
   Descripcion VARCHAR [not null]
   IDTipoGeocerca INT // POLYGON, CIRCLE, CUSTOM
+  EsVenta BIT
+  EsReparto BIT
   LatitudCentro DECIMAL(10,6)
   LongitudCentro DECIMAL(10,6)
   RadioMetros DECIMAL(10,2) // si es tipo "CIRCLE"
@@ -323,6 +326,7 @@ Table Zona {
   FechaCreacion DATETIME
   FechaModificacion DATETIME
 }
+Ref: Direccion.IDZonaReparto > Zona.ID [delete: restrict]
 Table TipoGeocerca {
   ID INT [pk, increment, unique]
   Codigo VARCHAR [not null]
